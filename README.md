@@ -1,3 +1,13 @@
+# streamlink / FFmpeg-Builds
+
+This is a fork of [`BtbN/FFmpeg-Builds`](https://github.com/BtbN/FFmpeg-Builds) with modifications
+of the build and deploy config.
+
+The goal of this fork is to have win32 builds of FFmpeg for inclusion in 
+[Streamlink](https://github.com/streamlink/streamlink)'s Windows installer.
+
+----
+
 # FFmpeg Static Auto-Builds
 
 Static Windows (x86_64) and Linux (x86_64) Builds of ffmpeg master and latest release branch.
