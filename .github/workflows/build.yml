@@ -128,3 +128,22 @@ jobs:
         with:
           name: ffmpeg
           path: artifacts/*
+  publish_release:
+    name: Publish release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    needs: build_ffmpeg
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ffmpeg
+          path: artifacts
+      - name: Deploy
+        run: ./deploy.sh ./artifacts/ffmpeg-*.zip
+        env:
+          RELEASES_API_KEY: ${{ github.token }}
