@@ -102,8 +102,3 @@ fi
 cd -
 
 rm -rf ffbuild
-
-if [[ -n "$GITHUB_ACTIONS" ]]; then
-    echo "::set-output name=build_name::${BUILD_NAME}"
-    echo "${OUTPUT_FNAME}" > "${ARTIFACTS_PATH}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}.txt"
-fi
