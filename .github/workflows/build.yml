@@ -144,6 +144,6 @@ jobs:
           name: ffmpeg
           path: artifacts
       - name: Deploy
-        run: ./deploy.sh ./artifacts/ffmpeg-*.zip
+        run: ./deploy.sh ./artifacts/ffmpeg-*.{zip,txt}
         env:
           RELEASES_API_KEY: ${{ github.token }}
