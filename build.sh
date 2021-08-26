@@ -78,7 +78,12 @@ mkdir -p artifacts
 ARTIFACTS_PATH="$PWD/artifacts"
 BUILD_NAME="ffmpeg-$(./ffbuild/ffmpeg/ffbuild/version.sh ffbuild/ffmpeg)-${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
 
-cat <<EOF >"${ARTIFACTS_PATH}/${BUILD_NAME}.txt"
+mkdir -p "ffbuild/pkgroot/$BUILD_NAME"
+package_variant ffbuild/prefix "ffbuild/pkgroot/$BUILD_NAME"
+
+cp "ffbuild/ffmpeg/$LICENSE_FILE" "ffbuild/pkgroot/$BUILD_NAME/LICENSE.txt"
+
+cat <<EOF >"ffbuild/pkgroot/$BUILD_NAME/BUILDINFO.txt"
 Streamlink FFmpeg Builds <https://github.com/streamlink/FFmpeg-Builds>
 
 Commit: $(git rev-parse HEAD)
@@ -87,11 +92,6 @@ Build: ${BUILD_NAME}
 Configuration:
   $(sed -E 's/\s+/\n  /g' <<< "${FF_CONFIGURE}")
 EOF
-
-mkdir -p "ffbuild/pkgroot/$BUILD_NAME"
-package_variant ffbuild/prefix "ffbuild/pkgroot/$BUILD_NAME"
-
-cp "ffbuild/ffmpeg/$LICENSE_FILE" "ffbuild/pkgroot/$BUILD_NAME/LICENSE.txt"
 
 cd ffbuild/pkgroot
 if [[ "${TARGET}" == win* ]]; then
