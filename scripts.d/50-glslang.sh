@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GLSLANG_REPO="https://github.com/KhronosGroup/glslang.git"
-GLSLANG_COMMIT="a4599ef7561abed83d45bab4c7492daeceef92a5"
+GLSLANG_COMMIT="d1608ab1ef17f1488bdcbfe11f2c3c96ac482fce"
 
 ffbuild_enabled() {
     # Pointless without Vulkan
