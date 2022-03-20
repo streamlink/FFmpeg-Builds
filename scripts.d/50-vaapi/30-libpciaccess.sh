@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LIBPCIACCESS_REPO="https://gitlab.freedesktop.org/xorg/lib/libpciaccess.git"
-LIBPCIACCESS_COMMIT="9c01fdd7c02d8b9b5003e659ebca0b3643bd47c4"
+LIBPCIACCESS_COMMIT="4ef1660667425c0f171949aacae9d07b10a40d7f"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -16,8 +16,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --disable-shared
-        --enable-static
+        --enable-shared
+        --disable-static
         --with-pic
         --with-zlib
     )
@@ -31,7 +31,15 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
+    export CFLAGS="$RAW_CFLAGS"
+    export LDFLAFS="$RAW_LDFLAGS"
+
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install
+
+    gen-implib "$FFBUILD_PREFIX"/lib/{libpciaccess.so.0,libpciaccess.a}
+    rm "$FFBUILD_PREFIX"/lib/libpciaccess{.so*,.la}
+
+    echo "Libs: -ldl" >> "$FFBUILD_PREFIX"/lib/pkgconfig/pciaccess.pc
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MINGW_REPO="https://github.com/mirror/mingw-w64.git"
-MINGW_COMMIT="a2eb3ea3aaa7c780c4b4ab30d71169f442788864"
+MINGW_COMMIT="99c95def1dcafdd7a2faa671942bdd17cc19864d"
 
 ffbuild_enabled() {
     [[ $TARGET == win* ]] || return -1
@@ -28,8 +28,10 @@ ffbuild_dockerbuild() {
     unset LDFLAGS
     unset PKG_CONFIG_LIBDIR
 
+    GCC_SYSROOT="$(${FFBUILD_CROSS_PREFIX}gcc -print-sysroot)"
+
     local myconf=(
-        --prefix="/usr/$FFBUILD_TOOLCHAIN"
+        --prefix="$GCC_SYSROOT/usr/$FFBUILD_TOOLCHAIN"
         --host="$FFBUILD_TOOLCHAIN"
         --with-default-win32-winnt="0x601"
         --enable-idl
@@ -42,7 +44,7 @@ ffbuild_dockerbuild() {
     cd ../mingw-w64-libraries/winpthreads
 
     local myconf=(
-        --prefix="/usr/$FFBUILD_TOOLCHAIN"
+        --prefix="$GCC_SYSROOT/usr/$FFBUILD_TOOLCHAIN"
         --host="$FFBUILD_TOOLCHAIN"
         --with-pic
         --disable-shared

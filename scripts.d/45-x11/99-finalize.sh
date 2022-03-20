@@ -11,5 +11,10 @@ ffbuild_dockerlayer() {
 }
 
 ffbuild_dockerbuild() {
-    true
+    rm "$FFBUILD_PREFIX"/lib/lib*.so* || true
+    rm "$FFBUILD_PREFIX"/lib/*.la || true
+}
+
+ffbuild_libs() {
+    echo -ldl
 }

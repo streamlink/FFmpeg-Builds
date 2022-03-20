@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LIBXCB_REPO="https://gitlab.freedesktop.org/xorg/lib/libxcb.git"
-LIBXCB_COMMIT="233d7b7f1f03ef18bf3955eb1f20421e745d22f0"
+LIBXCB_COMMIT="ddafdba11f6919e6fcf977c09c78b06f94de47aa"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -16,8 +16,8 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --disable-shared
-        --enable-static
+        --enable-shared
+        --disable-static
         --with-pic
         --disable-devel-docs
     )
@@ -31,9 +31,17 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
+    export CFLAGS="$RAW_CFLAGS"
+    export LDFLAFS="$RAW_LDFLAGS"
+
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install
+
+    for LIBNAME in "$FFBUILD_PREFIX"/lib/libxcb*.so.?; do
+        gen-implib "$LIBNAME" "${LIBNAME%%.*}.a"
+        rm "${LIBNAME%%.*}"{.so*,.la}
+    done
 }
 
 ffbuild_configure() {
