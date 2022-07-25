@@ -1,14 +1,14 @@
 #!/bin/bash
 
-SORD_REPO="https://github.com/drobilla/sord.git"
-SORD_COMMIT="d2efdb2d026216449599350b55c2c85c0d3efb89"
+SCRIPT_REPO="https://github.com/drobilla/sord.git"
+SCRIPT_COMMIT="ee631481ba7cbe5f6afdf5dd00860eb9bbed57f4"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SORD_REPO" "$SORD_COMMIT" sord
+    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" sord
     cd sord
     git submodule update --init --recursive --depth 1
 

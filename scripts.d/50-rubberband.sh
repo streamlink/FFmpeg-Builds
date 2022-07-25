@@ -1,7 +1,7 @@
 #!/bin/bash
 
-RUBBERBAND_REPO="https://github.com/breakfastquay/rubberband.git"
-RUBBERBAND_COMMIT="30e63d33ace7c12e2f5feb6838a7c9d4c3a9392f"
+SCRIPT_REPO="https://github.com/breakfastquay/rubberband.git"
+SCRIPT_COMMIT="766cb4b061e468cd5676bcff56b61f7805cc798b"
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
@@ -9,7 +9,7 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$RUBBERBAND_REPO" "$RUBBERBAND_COMMIT" rubberband
+    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" rubberband
     cd rubberband
 
     mkdir build && cd build

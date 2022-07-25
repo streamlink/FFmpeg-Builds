@@ -1,7 +1,7 @@
 #!/bin/bash
 
-AOM_REPO="https://aomedia.googlesource.com/aom"
-AOM_COMMIT="493cf67c62441838a56c5ea6f8dfbf6777e3cee7"
+SCRIPT_REPO="https://aomedia.googlesource.com/aom"
+SCRIPT_COMMIT="5cbe762ad67590d3d4c49d1979a06e063b444bd5"
 
 ffbuild_enabled() {
     return 0
@@ -12,7 +12,7 @@ ffbuild_dockerstage() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$AOM_REPO" "$AOM_COMMIT" aom
+    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" aom
     cd aom
 
     for patch in /patches/*.patch; do

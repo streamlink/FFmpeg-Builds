@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PLACEBO_REPO="https://code.videolan.org/videolan/libplacebo.git"
-PLACEBO_COMMIT="c71bbe1cc86bee7d679af05120b67b44947a6ea2"
+SCRIPT_REPO="https://code.videolan.org/videolan/libplacebo.git"
+SCRIPT_COMMIT="32837eb1028f7d4197b02cebca9b6e0857a1dbf8"
 
 ffbuild_enabled() {
     [[ $ADDINS_STR == *4.4* ]] && return -1
@@ -9,7 +9,7 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$PLACEBO_REPO" "$PLACEBO_COMMIT" placebo
+    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" placebo
     cd placebo
 
     mkdir build && cd build
