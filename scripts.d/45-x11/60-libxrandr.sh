@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/xorg/lib/libxrandr.git"
-SCRIPT_COMMIT="55dcda4518eda8ae03ef25ea29d3c994ad71eb0a"
+SCRIPT_COMMIT="3387129532899eaeee3477a2d92fa662d7292a84"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1

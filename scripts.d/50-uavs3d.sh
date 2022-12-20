@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/uavs3/uavs3d.git"
-SCRIPT_COMMIT="818a0cb719c0cd012f21ad0b9c5d83669e36f861"
+SCRIPT_COMMIT="0133ee4b4bbbef7b88802e7ad019b14b9b852c2b"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
@@ -16,7 +16,8 @@ ffbuild_dockerbuild() {
     mkdir build/linux
     cd build/linux
 
-    cmake -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" -DBUILD_SHARED_LIBS=NO ../..
+    cmake -DCMAKE_TOOLCHAIN_FILE="$FFBUILD_CMAKE_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$FFBUILD_PREFIX" \
+        -DCOMPILE_10BIT=1 -DBUILD_SHARED_LIBS=NO ../..
     make -j$(nproc)
     make install
 }

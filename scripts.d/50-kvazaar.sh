@@ -1,15 +1,15 @@
 #!/bin/bash
 
-SCRIPT_REPO="https://chromium.googlesource.com/webm/libwebp"
-SCRIPT_COMMIT="e5fe2cfc1bea149106d94ef5233c488ed1287b68"
+SCRIPT_REPO="https://github.com/ultravideo/kvazaar.git"
+SCRIPT_COMMIT="a4005046ae2ebb3c88e92ff06736ce57b60fdcc7"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" webp
-    cd webp
+    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" kvazaar
+    cd kvazaar
 
     ./autogen.sh
 
@@ -18,15 +18,6 @@ ffbuild_dockerbuild() {
         --disable-shared
         --enable-static
         --with-pic
-        --enable-libwebpmux
-        --disable-libwebpextras
-        --disable-libwebpdemux
-        --disable-sdl
-        --disable-gl
-        --disable-png
-        --disable-jpeg
-        --disable-tiff
-        --disable-gif
     )
 
     if [[ $TARGET == win* || $TARGET == linux* ]]; then
@@ -41,12 +32,14 @@ ffbuild_dockerbuild() {
     ./configure "${myconf[@]}"
     make -j$(nproc)
     make install
+
+    echo "Cflags.private: -DKVZ_STATIC_LIB" >> "$FFBUILD_PREFIX"/lib/pkgconfig/kvazaar.pc
 }
 
 ffbuild_configure() {
-    echo --enable-libwebp
+    echo --enable-libkvazaar
 }
 
 ffbuild_unconfigure() {
-    echo --disable-libwebp
+    echo --disable-libkvazaar
 }

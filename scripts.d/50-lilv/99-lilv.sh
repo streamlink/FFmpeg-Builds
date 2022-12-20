@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/lv2/lilv.git"
-SCRIPT_COMMIT="c36d3451278555134de850fc548d743b6da2179a"
+SCRIPT_COMMIT="c3a4d586848f1a5a6e663a42ac5e841218109620"
 
 ffbuild_enabled() {
     return 0
@@ -10,22 +10,31 @@ ffbuild_enabled() {
 ffbuild_dockerbuild() {
     git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" lilv
     cd lilv
-    git submodule update --init --recursive --depth 1
 
-    local mywaf=(
+    mkdir build && cd build
+
+    local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --static
-        --no-shared
-        --no-bindings
-        --no-utils
-        --no-bash-completion
+        --buildtype=release
+        --default-library=static
+        -Ddocs=disabled
+        -Dtools=disabled
+        -Dtests=disabled
+        -Dbindings_py=disabled
     )
 
-    CC="${FFBUILD_CROSS_PREFIX}gcc" CXX="${FFBUILD_CROSS_PREFIX}g++" ./waf configure "${mywaf[@]}"
-    ./waf -j$(nproc)
-    ./waf install
+    if [[ $TARGET == win* || $TARGET == linux* ]]; then
+        myconf+=(
+            --cross-file=/cross.meson
+        )
+    else
+        echo "Unknown target"
+        return -1
+    fi
 
-    sed -i 's/Cflags:/Cflags: -DLILV_STATIC/' "$FFBUILD_PREFIX"/lib/pkgconfig/lilv-0.pc
+    meson "${myconf[@]}" ..
+    ninja -j"$(nproc)"
+    ninja install
 }
 
 ffbuild_configure() {

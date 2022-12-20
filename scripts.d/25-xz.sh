@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/xz-mirror/xz.git"
-SCRIPT_COMMIT="4773608554d1b684a05ff9c1d879cf5c42266d33"
+SCRIPT_COMMIT="cf118c014683069b5dbe91898acdc40f2f0a1f5d"
 
 ffbuild_enabled() {
     return 0
@@ -15,6 +15,7 @@ ffbuild_dockerbuild() {
 
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
+        --disable-symbol-versions
         --disable-shared
         --enable-static
         --with-pic

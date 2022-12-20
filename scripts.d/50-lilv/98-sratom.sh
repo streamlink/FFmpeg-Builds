@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/lv2/sratom.git"
-SCRIPT_COMMIT="8cf09feee6895ba0760f8c24db6416dac9006dc3"
+SCRIPT_COMMIT="36fd5599e7c67f9d99046aa1570e7f0d308b7092"
 
 ffbuild_enabled() {
     return 0
@@ -10,17 +10,27 @@ ffbuild_enabled() {
 ffbuild_dockerbuild() {
     git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" sratom
     cd sratom
-    git submodule update --init --recursive --depth 1
 
-    local mywaf=(
+    mkdir build && cd build
+
+    local myconf=(
         --prefix="$FFBUILD_PREFIX"
-        --static
-        --no-shared
+        --buildtype=release
+        --default-library=static
+        -Ddocs=disabled
+        -Dtests=disabled
     )
 
-    CC="${FFBUILD_CROSS_PREFIX}gcc" CXX="${FFBUILD_CROSS_PREFIX}g++" ./waf configure "${mywaf[@]}"
-    ./waf -j$(nproc)
-    ./waf install
+    if [[ $TARGET == win* || $TARGET == linux* ]]; then
+        myconf+=(
+            --cross-file=/cross.meson
+        )
+    else
+        echo "Unknown target"
+        return -1
+    fi
 
-    sed -i 's/Cflags:/Cflags: -DSRATOM_STATIC/' "$FFBUILD_PREFIX"/lib/pkgconfig/sratom-0.pc
+    meson "${myconf[@]}" ..
+    ninja -j"$(nproc)"
+    ninja install
 }
