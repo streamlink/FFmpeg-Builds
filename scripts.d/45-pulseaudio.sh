@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/pulseaudio/pulseaudio.git"
-SCRIPT_COMMIT="0cbbc408aee2b5f2c42280d24dc615405387b5b1"
+SCRIPT_COMMIT="300db779224625144d6279d230c2daa857c967d8"
 
 ffbuild_enabled() {
     [[ $TARGET == linux* ]] || return 1

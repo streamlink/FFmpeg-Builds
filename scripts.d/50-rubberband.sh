@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/breakfastquay/rubberband.git"
-SCRIPT_COMMIT="c871f92b2e377742d232d2d723c9ef0b6b3561f2"
+SCRIPT_COMMIT="b317d0e81a8e0ea84269cc2c1dab2906ca8df271"
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1

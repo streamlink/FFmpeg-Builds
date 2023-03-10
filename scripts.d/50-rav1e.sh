@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/xiph/rav1e.git"
-SCRIPT_COMMIT="0fb96baa0a8c2a539ad0c148b6b2f9cfed37707a"
+SCRIPT_COMMIT="c548b8498c039614fa3c8583cdf093ffa8fdd742"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
@@ -43,6 +43,8 @@ EOF
     fi
 
     cargo cinstall -v "${myconf[@]}"
+
+    chmod 644 "${FFBUILD_PREFIX}"/lib/*rav1e*
 }
 
 ffbuild_configure() {

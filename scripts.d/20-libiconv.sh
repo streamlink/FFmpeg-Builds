@@ -1,15 +1,16 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://git.savannah.gnu.org/git/libiconv.git"
-SCRIPT_COMMIT="2582e7bb06f1638877713400e2d11db547798a49"
+SCRIPT_COMMIT="0a05ca75c08ae899f6fca5f79254491e13ffb500"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" iconv
+    git clone "$SCRIPT_REPO" iconv
     cd iconv
+    git checkout "$SCRIPT_COMMIT"
 
     ./gitsub.sh pull
     ./autogen.sh
