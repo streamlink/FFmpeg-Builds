@@ -1,15 +1,14 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/uclouvain/openjpeg.git"
-SCRIPT_COMMIT="ee58d77047867dd422593163e660e66a109ba1c0"
+SCRIPT_COMMIT="1ee6d115e80036d1d38bad7f95a680bfc612c1bf"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" openjpeg
-    cd openjpeg
+    cd "$FFBUILD_DLDIR/$SELF"
 
     mkdir build && cd build
 

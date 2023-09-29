@@ -1,15 +1,14 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/fontconfig/fontconfig.git"
-SCRIPT_COMMIT="2ef790a0dbbab24235d1b8c0325ab4414de5f0a9"
+SCRIPT_COMMIT="16eff2de2350144a08cdb8bec06fd4b0fe3f586b"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" fc
-    cd fc
+    cd "$FFBUILD_DLDIR/$SELF"
 
     ./autogen.sh --noconf
 
@@ -22,7 +21,13 @@ ffbuild_dockerbuild() {
         --enable-static
     )
 
-    if [[ $TARGET == win* || $TARGET == linux* ]]; then
+    if [[ $TARGET == linux* ]]; then
+        myconf+=(
+            --sysconfdir=/etc
+            --localstatedir=/var
+            --host="$FFBUILD_TOOLCHAIN"
+        )
+    elif [[ $TARGET == win* ]]; then
         myconf+=(
             --host="$FFBUILD_TOOLCHAIN"
         )

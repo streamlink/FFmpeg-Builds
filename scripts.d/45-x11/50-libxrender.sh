@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/xorg/lib/libxrender.git"
-SCRIPT_COMMIT="e5e23272394c90731debd7e18dd167e8c25b5c15"
+SCRIPT_COMMIT="01e754610df2195536c5b31c1e8df756480599d1"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -9,8 +9,7 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" libxrender
-    cd libxrender
+    cd "$FFBUILD_DLDIR/$SELF"
 
     autoreconf -i
 

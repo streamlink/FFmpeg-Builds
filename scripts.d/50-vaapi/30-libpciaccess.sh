@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/xorg/lib/libpciaccess.git"
-SCRIPT_COMMIT="833c86ce15cee2a84a37ae71015f236fd32615d9"
+SCRIPT_COMMIT="03d0b467804bf033c2be259be3f091231f74cff9"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -9,8 +9,7 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" libpciaccess
-    cd libpciaccess
+    cd "$FFBUILD_DLDIR/$SELF"
 
     autoreconf -fi
 

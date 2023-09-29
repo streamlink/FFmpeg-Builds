@@ -1,15 +1,14 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://chromium.googlesource.com/webm/libvpx"
-SCRIPT_COMMIT="5595e18870b24fdfd8fdeb4cfa5ea51824486273"
+SCRIPT_COMMIT="fd2052d4c91ca9451563482817bbeab1da3f76e7"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" libvpx
-    cd libvpx
+    cd "$FFBUILD_DLDIR/$SELF"
 
     local myconf=(
         --disable-shared

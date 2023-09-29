@@ -1,15 +1,14 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/lv2/sratom.git"
-SCRIPT_COMMIT="988162496bbb66a2c52d384ef2ca602698024267"
+SCRIPT_COMMIT="1d48d40ac4948b1864ca09e9d0a26fdd71bbee8d"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" sratom
-    cd sratom
+    cd "$FFBUILD_DLDIR/$SELF"
 
     mkdir build && cd build
 

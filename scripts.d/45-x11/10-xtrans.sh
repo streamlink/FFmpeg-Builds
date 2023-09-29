@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/xorg/lib/libxtrans.git"
-SCRIPT_COMMIT="c761c6505d49e8381a3eae94f2e5e118cbdf6487"
+SCRIPT_COMMIT="3b3a3bd75d86aec78f6ef893b198c3efc378bc64"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -9,8 +9,7 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    git-mini-clone "$SCRIPT_REPO" "$SCRIPT_COMMIT" libxtrans
-    cd libxtrans
+    cd "$FFBUILD_DLDIR/$SELF"
 
     autoreconf -i
 
