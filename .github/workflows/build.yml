@@ -16,6 +16,8 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: Free Disk-Space
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install buildx
@@ -45,6 +47,7 @@ jobs:
           context: images/base
           pull: true
           push: true
+          provenance: false
           tags: ${{ steps.imagename.outputs.name }}:latest
           cache-to: type=registry,mode=max,ref=${{ steps.imagename.outputs.name }}:cache
           cache-from: type=registry,ref=${{ steps.imagename.outputs.name }}:cache
@@ -61,6 +64,7 @@ jobs:
           file: Dockerfile.dl
           pull: true
           push: true
+          provenance: false
           tags: ${{ steps.imagename.outputs.dlname }}:${{ steps.dl_cache.outputs.dltagname }}
           cache-to: type=registry,mode=max,ref=${{ steps.imagename.outputs.dlname }}:cache
           cache-from: type=registry,ref=${{ steps.imagename.outputs.dlname }}:cache
@@ -77,6 +81,8 @@ jobs:
           - win32
           - win64
     steps:
+      - name: Free Disk-Space
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install buildx
@@ -104,6 +110,7 @@ jobs:
           context: images/base-${{ matrix.target }}
           pull: true
           push: true
+          provenance: false
           tags: ${{ steps.imagename.outputs.name }}:latest
           cache-to: type=registry,mode=max,ref=${{ steps.imagename.outputs.name }}:cache
           cache-from: type=registry,ref=${{ steps.imagename.outputs.name }}:cache
@@ -124,6 +131,8 @@ jobs:
         variant:
           - gpl 6.0
     steps:
+      - name: Free Disk-Space
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install buildx
@@ -152,6 +161,7 @@ jobs:
           context: .
           pull: true
           push: true
+          provenance: false
           tags: ${{ steps.imagename.outputs.name }}:latest
           cache-to: type=registry,mode=max,ref=${{ steps.imagename.outputs.name }}:cache
           cache-from: type=registry,ref=${{ steps.imagename.outputs.name }}:cache
@@ -170,6 +180,8 @@ jobs:
         variant:
           - gpl 6.0
     steps:
+      - name: Free Disk-Space
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Login to Docker
@@ -195,6 +207,8 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Free Disk-Space
+        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download artifacts
