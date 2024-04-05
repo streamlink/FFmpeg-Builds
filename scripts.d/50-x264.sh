@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SCRIPT_REPO="https://github.com/mirror/x264.git"
-SCRIPT_COMMIT="eaa68fad9e5d201d42fde51665f2d137ae96baf0"
+SCRIPT_REPO="https://code.videolan.org/videolan/x264.git"
+SCRIPT_COMMIT="7ed753b10a61d0be95f683289dfb925b800b0676"
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
@@ -9,8 +9,6 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    cd "$FFBUILD_DLDIR/$SELF"
-
     local myconf=(
         --disable-cli
         --enable-static

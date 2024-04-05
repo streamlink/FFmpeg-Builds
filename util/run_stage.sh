@@ -8,15 +8,25 @@ export RAW_LDFLAGS="$LDFLAGS"
 [[ -n "$STAGE_CXXFLAGS" ]] && export CXXFLAGS="$CXXFLAGS $STAGE_CXXFLAGS"
 [[ -n "$STAGE_LDFLAGS" ]] && export LDFLAGS="$LDFLAGS $STAGE_LDFLAGS"
 
-mkdir -p /stage
-source "$1"
-cd /stage
-if [[ -n "$3" ]]; then
-    cd "$3"
+if [[ -n "$STAGENAME" && -f /cache.tar.xz ]]; then
+    mkdir -p "/$STAGENAME"
+    tar xaf /cache.tar.xz -C "/$STAGENAME"
+    cd "/$STAGENAME"
+elif [[ -n "$STAGENAME" ]]; then
+    mkdir -p "/$STAGENAME"
+    cd "/$STAGENAME"
 fi
+
+git config --global --add safe.directory "$PWD"
+
+source "$1"
 if [[ -z "$2" ]]; then
     ffbuild_dockerbuild
 else
     "$2"
 fi
-rm -rf /stage "$FFBUILD_PREFIX"/bin
+rm -rf "$FFBUILD_PREFIX"/bin
+
+if [[ -n "$STAGENAME" ]]; then
+    rm -rf "/$STAGENAME"
+fi

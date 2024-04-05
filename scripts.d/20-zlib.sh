@@ -1,27 +1,17 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/madler/zlib.git"
-SCRIPT_COMMIT="ac8f12c97d1afd9bafa9c710f827d40a407d3266"
+SCRIPT_COMMIT="d201f04c72b0881220f5ba75ca19fd0e19fa848b"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    cd "$FFBUILD_DLDIR/$SELF"
-
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --static
     )
-
-    if [[ $TARGET == win* || $TARGET == linux* ]]; then
-        export CC="${FFBUILD_CROSS_PREFIX}gcc"
-        export AR="${FFBUILD_CROSS_PREFIX}ar"
-    else
-        echo "Unknown target"
-        return -1
-    fi
 
     ./configure "${myconf[@]}"
     make -j$(nproc)

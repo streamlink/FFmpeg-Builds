@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+shopt -s globstar
 cd "$(dirname "$0")"
 source util/vars.sh
 
@@ -18,49 +19,6 @@ to_df() {
     echo >> "$_of"
 }
 
-default_dl() {
-    to_df "RUN git-mini-clone \"$SCRIPT_REPO\" \"$SCRIPT_COMMIT\" \"$1\""
-}
-
-###
-### Generate download Dockerfile
-###
-
-exec_dockerstage_dl() {
-    SCRIPT="$1"
-    (
-        SELF="$SCRIPT"
-        SELFLAYER="$(layername "$STAGE")"
-        source "$SCRIPT"
-        ffbuild_dockerdl || exit $?
-        TODF="Dockerfile.dl.final" ffbuild_dockerlayer_dl || exit $?
-    )
-}
-
-export TODF="Dockerfile.dl"
-
-to_df "FROM ${REGISTRY}/${REPO}/base:latest AS base"
-to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR"
-to_df "WORKDIR \$FFBUILD_DLDIR"
-
-for STAGE in scripts.d/*.sh scripts.d/*/*.sh; do
-    to_df "FROM base AS $(layername "$STAGE")"
-    exec_dockerstage_dl "$STAGE"
-done
-
-to_df "FROM base AS intermediate"
-cat Dockerfile.dl.final >> "$TODF"
-rm Dockerfile.dl.final
-
-to_df "FROM scratch"
-to_df "COPY --from=intermediate /opt/ffdl/. /"
-
-if [[ "$TARGET" == "dl" && "$VARIANT" == "only" ]]; then
-    exit 0
-fi
-
-DL_IMAGE="${DL_IMAGE_RAW}:$(./util/get_dl_cache_tag.sh)"
-
 ###
 ### Generate main Dockerfile
 ###
@@ -69,11 +27,20 @@ exec_dockerstage() {
     SCRIPT="$1"
     (
         SELF="$SCRIPT"
+        STAGENAME="$(basename "$SCRIPT" | sed 's/.sh$//')"
+        source util/dl_functions.sh
         source "$SCRIPT"
 
         ffbuild_enabled || exit 0
 
-        to_df "ENV SELF=\"$SELF\""
+        to_df "ENV SELF=\"$SELF\" STAGENAME=\"$STAGENAME\""
+
+        STG="$(ffbuild_dockerdl)"
+        if [[ -n "$STG" ]]; then
+            HASH="$(sha256sum <<<"$STG" | cut -d" " -f1)"
+            export SELFCACHE=".cache/downloads/${STAGENAME}_${HASH}.tar.xz"
+        fi
+
         ffbuild_dockerstage || exit $?
     )
 }
@@ -82,6 +49,7 @@ export TODF="Dockerfile"
 
 to_df "FROM ${REGISTRY}/${REPO}/base-${TARGET}:latest AS base"
 to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR"
+to_df "COPY util/run_stage.sh /usr/bin/run_stage"
 
 for addin in "${ADDINS[@]}"; do
 (
@@ -132,3 +100,49 @@ done
 to_df "FROM base"
 sed "s/__PREVLAYER__/$PREVLAYER/g" Dockerfile.final | sort -u >> Dockerfile
 rm Dockerfile.final
+
+###
+### Compile list of configure arguments and add them to the final Dockerfile
+###
+
+get_output() {
+    (
+        SELF="$1"
+        source $1
+        if ffbuild_enabled; then
+            ffbuild_$2 || exit 0
+        else
+            ffbuild_un$2 || exit 0
+        fi
+    )
+}
+
+source "variants/${TARGET}-${VARIANT}.sh"
+
+for addin in ${ADDINS[*]}; do
+    source "addins/${addin}.sh"
+done
+
+for script in scripts.d/**/*.sh; do
+    FF_CONFIGURE+=" $(get_output $script configure)"
+    FF_CFLAGS+=" $(get_output $script cflags)"
+    FF_CXXFLAGS+=" $(get_output $script cxxflags)"
+    FF_LDFLAGS+=" $(get_output $script ldflags)"
+    FF_LDEXEFLAGS+=" $(get_output $script ldexeflags)"
+    FF_LIBS+=" $(get_output $script libs)"
+done
+
+FF_CONFIGURE="$(xargs <<< "$FF_CONFIGURE")"
+FF_CFLAGS="$(xargs <<< "$FF_CFLAGS")"
+FF_CXXFLAGS="$(xargs <<< "$FF_CXXFLAGS")"
+FF_LDFLAGS="$(xargs <<< "$FF_LDFLAGS")"
+FF_LDEXEFLAGS="$(xargs <<< "$FF_LDEXEFLAGS")"
+FF_LIBS="$(xargs <<< "$FF_LIBS")"
+
+to_df "ENV \\"
+to_df "    FF_CONFIGURE=\"$FF_CONFIGURE\" \\"
+to_df "    FF_CFLAGS=\"$FF_CFLAGS\" \\"
+to_df "    FF_CXXFLAGS=\"$FF_CXXFLAGS\" \\"
+to_df "    FF_LDFLAGS=\"$FF_LDFLAGS\" \\"
+to_df "    FF_LDEXEFLAGS=\"$FF_LDEXEFLAGS\" \\"
+to_df "    FF_LIBS=\"$FF_LIBS\""

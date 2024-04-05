@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/intel/libva.git"
-SCRIPT_COMMIT="45afd79ae4b887ad06cfca7316ada5c2688513f9"
+SCRIPT_COMMIT="1b7d71f68b6ebc7f7c3b80e3eb6b3d888b0463e1"
 
 ffbuild_enabled() {
     [[ $ADDINS_STR == *4.4* && $TARGET == win* ]] && return -1
@@ -13,8 +13,6 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    cd "$FFBUILD_DLDIR/$SELF"
-
     # This works around an issue of our libxcb-dri3 implib-wrapper not exporting data symbols.
     # Under normal circumstances, this would break horribly.
     # But we only want to generate another import lib for libva, so it doesn't matter.

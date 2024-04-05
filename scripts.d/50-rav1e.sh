@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/xiph/rav1e.git"
-SCRIPT_COMMIT="7f01f3c606df5be1c6ea52a653f085fccbd64b4d"
+SCRIPT_COMMIT="f3dd0499f2e6c246d531ab1aab46c1e0bb30b4da"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
@@ -9,37 +9,17 @@ ffbuild_enabled() {
 }
 
 ffbuild_dockerbuild() {
-    cd "$FFBUILD_DLDIR/$SELF"
-
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
+        --target="${FFBUILD_RUST_TARGET}"
         --library-type=staticlib
         --crt-static
         --release
     )
 
-    if [[ -n "$FFBUILD_RUST_TARGET" ]]; then
-        unset PKG_CONFIG_LIBDIR
-
-        export CC="gcc"
-        export CXX="g++"
-        export TARGET_CC="${FFBUILD_CROSS_PREFIX}gcc"
-        export TARGET_CXX="${FFBUILD_CROSS_PREFIX}g++"
-        export CROSS_COMPILE=1
-        export TARGET_CFLAGS="$CFLAGS"
-        export TARGET_CXXFLAGS="$CFLAGS"
-        unset CFLAGS
-        unset CXXFLAGS
-
-        myconf+=(
-            --target="$FFBUILD_RUST_TARGET"
-        )
-        cat <<EOF >$CARGO_HOME/config.toml
-[target.$FFBUILD_RUST_TARGET]
-linker = "${FFBUILD_CROSS_PREFIX}gcc"
-ar = "${FFBUILD_CROSS_PREFIX}ar"
-EOF
-    fi
+    # Pulls in target-libs for host tool builds otherwise.
+    # Luckily no target libraries are needed.
+    unset PKG_CONFIG_LIBDIR
 
     cargo cinstall -v "${myconf[@]}"
 
