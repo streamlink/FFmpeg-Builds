@@ -219,8 +219,6 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Free Disk-Space
-        run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download artifacts
@@ -230,6 +228,6 @@ jobs:
           merge-multiple: true
           path: artifacts
       - name: Deploy
-        run: ./deploy.sh ./artifacts/**/*
+        run: ./deploy.sh ./artifacts/*
         env:
           RELEASES_API_KEY: ${{ github.token }}
