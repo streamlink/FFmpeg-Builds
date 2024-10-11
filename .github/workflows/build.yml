@@ -127,7 +127,7 @@ jobs:
           - linux64
           - linuxarm64
         variant:
-          - gpl 7.0
+          - gpl 7.1
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
@@ -187,7 +187,7 @@ jobs:
           - linux64
           - linuxarm64
         variant:
-          - gpl 7.0
+          - gpl 7.1
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc && df -h
