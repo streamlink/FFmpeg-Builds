@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/mingw-w64/mingw-w64.git"
-SCRIPT_COMMIT="7c9cfe6708cafc83c14a2654308b2db62b126eae"
+SCRIPT_COMMIT="8f7b5ce363fbfa9d66a38034525cf0fdae4385a3"
 
 ffbuild_enabled() {
     [[ $TARGET == win* ]] || return -1
@@ -10,8 +10,8 @@ ffbuild_enabled() {
 
 ffbuild_dockerlayer() {
     [[ $TARGET == winarm* ]] && return 0
-    to_df "COPY --from=${SELFLAYER} /opt/mingw/. /"
-    to_df "COPY --from=${SELFLAYER} /opt/mingw/. /opt/mingw"
+    to_df "COPY --link --from=${SELFLAYER} /opt/mingw/. /"
+    to_df "COPY --link --from=${SELFLAYER} /opt/mingw/. /opt/mingw"
 }
 
 ffbuild_dockerfinal() {

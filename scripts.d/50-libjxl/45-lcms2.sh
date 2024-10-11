@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/mm2/Little-CMS.git"
-SCRIPT_COMMIT="2daf5c5859e1b62b6633ca755074e4de02459241"
+SCRIPT_COMMIT="5c54a6dedf6bebefa3a2dbbcf0164bb5616d4ba8"
 
 ffbuild_enabled() {
     return 0
@@ -27,7 +27,9 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
-    meson "${myconf[@]}" ..
+    export CFLAGS="$CFLAGS -fpermissive"
+
+    meson setup "${myconf[@]}" ..
     ninja -j$(nproc)
     ninja install
 }
