@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/KhronosGroup/OpenCL-Headers.git"
-SCRIPT_COMMIT="4ea6df132107e3b4b9407f903204b5522fdffcd6"
+SCRIPT_COMMIT="8a97ebc88daa3495d6f57ec10bb515224400186f"
 
 SCRIPT_REPO2="https://github.com/KhronosGroup/OpenCL-ICD-Loader.git"
-SCRIPT_COMMIT2="92280246c8e30795f08362425510d6acfc5c3f0d"
+SCRIPT_COMMIT2="6245403ed35c00c9dfbc63f93f7214927d02beb6"
 
 ffbuild_enabled() {
     return 0

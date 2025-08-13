@@ -1,15 +1,13 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/glennrp/libpng.git"
-SCRIPT_COMMIT="c1cc0f3f4c3d4abd11ca68c59446a29ff6f95003"
+SCRIPT_COMMIT="134ab615b617f548e822d8857f1cfc0525aefeba"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
-    autoreconf -i
-
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --disable-shared

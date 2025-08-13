@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/intel/libvpl.git"
-SCRIPT_COMMIT="025d43d086a3e663184cb49febe86152bf05409f"
+SCRIPT_COMMIT="3591aa94dfbdf4566cd19f3e976ae5b769ab4fa2"
 
 ffbuild_enabled() {
     [[ $TARGET == *arm64 ]] && return -1
@@ -24,6 +24,8 @@ ffbuild_dockerbuild() {
     ninja install
 
     rm -rf "$FFBUILD_PREFIX"/{etc,share}
+
+    echo "Libs.private: -lstdc++" >> "$FFBUILD_PREFIX"/lib/pkgconfig/vpl.pc
 }
 
 ffbuild_configure() {
