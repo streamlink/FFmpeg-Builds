@@ -3,7 +3,7 @@ FROM $GH_REPO/base:latest
 
 RUN \
     git clone --filter=blob:none https://github.com/mstorsjo/llvm-mingw /llvm-mingw && cd /llvm-mingw && \
-    ./build-all.sh --disable-lldb --disable-lldb-mi /opt/llvm-mingw && \
+    ./build-all.sh --use-linker=bfd --disable-lldb --disable-lldb-mi /opt/llvm-mingw && \
     cd / && \
     rm -rf llvm-mingw
 
@@ -13,10 +13,10 @@ RUN \
 
 # Prepare "cross" environment to heavily favour static builds
 RUN \
-    find /opt/llvm-mingw \
+    find /opt/llvm-mingw \( \
         -name "*.dll" \
         -or -name "*.dll.a" \
-        -delete && \
+        \) -delete && \
     mkdir /opt/ffbuild
 
 ENV FFBUILD_TOOLCHAIN=aarch64-w64-mingw32 \

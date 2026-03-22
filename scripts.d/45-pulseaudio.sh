@@ -1,7 +1,15 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/pulseaudio/pulseaudio.git"
-SCRIPT_COMMIT="98c7c9eafb148c6e66e5fe178fc156b00f3bf51a"
+SCRIPT_COMMIT="b096704c0d42c5e784deb781a07b23cfb5286a82"
+
+ffbuild_depends() {
+    echo base
+    echo libiconv
+    echo libsamplerate
+    echo soxr
+    echo openssl
+}
 
 ffbuild_enabled() {
     [[ $TARGET == linux* ]] || return 1
@@ -28,10 +36,10 @@ ffbuild_dockerbuild() {
         --default-library=static
         -Ddaemon=false
         -Dclient=true
-        -Ddoxygen=false
+        -Ddoxygen=disabled
         -Dgcov=false
         -Dman=false
-        -Dtests=false
+        -Dtests=disabled
         -Dipv6=true
         -Dopenssl=enabled
     )
@@ -45,7 +53,7 @@ ffbuild_dockerbuild() {
         return -1
     fi
 
-    meson "${myconf[@]}" ..
+    meson setup "${myconf[@]}" ..
     ninja -j"$(nproc)"
     DESTDIR="$FFBUILD_DESTDIR" ninja install
 

@@ -25,13 +25,13 @@ jobs:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           buildkitd-config: .github/buildkit.toml
       - name: Login to Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -40,13 +40,13 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/base"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
       - name: Stop Commands
         run: T="$(echo -n ${{ github.token }} | sha256sum | head -c 64)" && echo -e "::add-mask::${T}\n::stop-commands::${T}"
       - name: Build target base image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/base
           pull: true
@@ -62,7 +62,7 @@ jobs:
           echo "dltagname=$(./util/get_dl_cache_tag.sh)" >> $GITHUB_OUTPUT
       - name: Cache
         if: ${{ !cancelled() && !contains(matrix.runner, 'arm') }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .cache/downloads
           key: download-cache-${{ steps.dl_cache.outputs.dltagname }}
@@ -77,7 +77,7 @@ jobs:
           tar czf .cache/cache.tar.gz .cache/downloads/*
       - name: Upload cache artifact
         if: ${{ !cancelled() && !contains(matrix.runner, 'arm') }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: download-cache
           overwrite: true
@@ -99,13 +99,13 @@ jobs:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           buildkitd-config: .github/buildkit.toml
       - name: Login to Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -114,14 +114,14 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/base-${{ matrix.target }}"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
           echo "gh_repo=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
       - name: Stop Commands
         run: T="$(echo -n ${{ github.token }} | sha256sum | head -c 64)" && echo -e "::add-mask::${T}\n::stop-commands::${T}"
       - name: Build target base image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: images/base-${{ matrix.target }}
           pull: true
@@ -151,13 +151,13 @@ jobs:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           buildkitd-config: .github/buildkit.toml
       - name: Login to Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -166,7 +166,7 @@ jobs:
         id: imagename
         run: |
           IMG="${GITHUB_REPOSITORY,,}/${{ matrix.target }}-${{ matrix.variant }}"
-          IMG="${IMG/ /-}"
+          IMG="${IMG// /-}"
           echo "name=ghcr.io/${IMG}" >> $GITHUB_OUTPUT
           echo "rawname=${IMG#*/}" >> $GITHUB_OUTPUT
       - name: Get download cache key
@@ -178,13 +178,13 @@ jobs:
       - name: Generate Dockerfile
         run: ./generate.sh ${{ matrix.target }} ${{ matrix.variant }}
       - name: Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: .cache/downloads
           key: download-cache-${{ steps.dl_cache.outputs.dltagname }}
           fail-on-cache-miss: true
       - name: Build target base image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           pull: true
@@ -212,9 +212,9 @@ jobs:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Login to Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -229,7 +229,7 @@ jobs:
           SLUG="${{ matrix.target }}-${{ matrix.variant }}"
           echo "artifact_slug=${SLUG// /-}" >> $GITHUB_OUTPUT
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ffmpeg-${{ steps.strs.outputs.artifact_slug }}
           overwrite: true
@@ -243,9 +243,9 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: ffmpeg-*
           merge-multiple: true

@@ -1,7 +1,12 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/GNOME/libxml2.git"
-SCRIPT_COMMIT="f1e1f13b766eb580a8dcc0c4e7a447346dfd862e"
+SCRIPT_COMMIT="8f5f02ba295a20dfc5ddd8de03894918c5870ec8"
+
+ffbuild_depends() {
+    echo base
+    echo libiconv
+}
 
 ffbuild_enabled() {
     return 0

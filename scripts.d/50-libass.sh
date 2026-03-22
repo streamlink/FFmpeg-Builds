@@ -1,7 +1,15 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/libass/libass.git"
-SCRIPT_COMMIT="338fd2cea8ac156a910b04838b5f40b868e41160"
+SCRIPT_COMMIT="fadc390583f24eb5cf98f16925fd3adee50bca88"
+
+ffbuild_depends() {
+    echo base
+    echo fonts
+    echo fribidi
+    echo libiconv
+    echo libunibreak
+}
 
 ffbuild_enabled() {
     return 0
@@ -15,6 +23,7 @@ ffbuild_dockerbuild() {
         --disable-shared
         --enable-static
         --with-pic
+        --enable-libunibreak
     )
 
     if [[ $TARGET == win* || $TARGET == linux* ]]; then

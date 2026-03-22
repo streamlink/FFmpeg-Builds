@@ -1,13 +1,20 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/glennrp/libpng.git"
-SCRIPT_COMMIT="134ab615b617f548e822d8857f1cfc0525aefeba"
+SCRIPT_COMMIT="28cb99fe65f09e79703ac2c3008649e14c7b0844"
+
+ffbuild_depends() {
+    echo base
+    echo zlib
+}
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
+    ./autogen.sh
+
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --disable-shared

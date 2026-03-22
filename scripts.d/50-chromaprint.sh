@@ -1,13 +1,15 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/acoustid/chromaprint.git"
-SCRIPT_COMMIT="ac31acc8431defbb134ec54eb11daf9146c74170"
+SCRIPT_COMMIT="6b13ce3a81ae931e7477c4856a86bece99157cd8"
+
+ffbuild_depends() {
+    echo base
+    echo fftw3
+}
 
 ffbuild_enabled() {
-    # pkg-config check is currently only available in master
-    [[ $ADDINS_STR == *4.4* ]] && return -1
-    [[ $ADDINS_STR == *5.0* ]] && return -1
-    [[ $ADDINS_STR == *5.1* ]] && return -1
+    (( $(ffbuild_ffver) >= 600 )) || return -1
     return 0
 }
 

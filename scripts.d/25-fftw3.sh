@@ -1,13 +1,15 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/FFTW/fftw3.git"
-SCRIPT_COMMIT="816722732224231e90e634b5839bb7808cddc6cd"
+SCRIPT_COMMIT="6c8f5c3e620ebc38262cd80ca6f65e9f85783d9e"
 
 ffbuild_enabled() {
     return 0
 }
 
 ffbuild_dockerbuild() {
+    sed -i 's/-libs nums/-use-ocamlfind -package num/' genfft/Makefile.am
+
     local myconf=(
         --prefix="$FFBUILD_PREFIX"
         --enable-maintainer-mode
