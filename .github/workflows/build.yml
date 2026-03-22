@@ -146,7 +146,7 @@ jobs:
           - linux64
           - linuxarm64
         variant:
-          - gpl 8.0
+          - gpl 8.1
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -207,7 +207,7 @@ jobs:
           - linux64
           - linuxarm64
         variant:
-          - gpl 8.0
+          - gpl 8.1
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
